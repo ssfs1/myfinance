@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	body {
+		background-image:
+			radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.06) 1px, transparent 0);
+		background-size: 24px 24px;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		@apply font-display;
+	}
+
+	::selection {
+		background: #ffeb3a;
+		color: #000;
+	}
+}
+
+@layer components {
+	.brutal-press {
+		@apply border-3 border-brutal shadow-brutal transition-transform duration-75 ease-brutal;
+	}
+
+	.brutal-press:hover:not(:disabled) {
+		@apply translate-x-[2px] translate-y-[2px] shadow-brutal-sm;
+	}
+
+	.brutal-press:active:not(:disabled) {
+		@apply translate-x-[4px] translate-y-[4px] shadow-none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.brutal-press,
+		.brutal-press:hover:not(:disabled),
+		.brutal-press:active:not(:disabled) {
+			transform: none !important;
+			transition: none !important;
+		}
+	}
+}
