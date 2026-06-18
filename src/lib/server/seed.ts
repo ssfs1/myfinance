@@ -1,10 +1,10 @@
 /**
- * Default categories seeded on first sign-in. Idempotent: checks for
- * existing defaults before inserting.
+ * Default categories + a starter account seeded on first sign-in.
+ * Idempotent: checks for existing rows before inserting.
  */
 import { eq, and } from 'drizzle-orm';
 import { db } from '$lib/server/db';
-import { categories } from '$lib/server/db/schema';
+import { categories, userAccounts, users } from '$lib/server/db/schema';
 
 interface DefaultCategory {
 	name: string;
@@ -55,4 +55,18 @@ export async function seedDefaults(userId: string): Promise<void> {
 			sortOrder: c.sortOrder,
 		})),
 	);
+
+	// Default account: a "Cash" account in the user's base currency.
+	const user = await db
+		.select({ baseCurrency: users.baseCurrency })
+		.from(users)
+		.where(eq(users.id, userId))
+		.limit(1);
+
+	await db.insert(userAccounts).values({
+		userId,
+		name: 'Cash',
+		currency: user[0]?.baseCurrency ?? 'USD',
+		openingBalanceCents: 0,
+	});
 }
